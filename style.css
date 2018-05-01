@@ -1,0 +1,87 @@
+ul {
+    padding-left: 0;
+    list-style: none;
+}
+.creator {
+    border: 1px solid black;
+    display: inline-block;
+    padding: 10px;
+    margin-bottom: 20px;    
+}
+.creatorRow {
+    margin-bottom: 10px;  
+}
+.creatorRow p {
+    text-align: center;
+    display: inline-block;
+}
+.creatorRow input {
+    display: inline-block;
+    
+}
+#notesWrapper {
+    display: flex;
+}
+.oneNote {
+    padding: 10px;
+    background: #ccc;
+    width: 250px;
+    margin-right: 30px;
+    position: relative;
+}
+.oneNote p {
+    word-break: break-all;
+    text-align: center;
+}
+.oneNoteTitle {
+    font-size: 20px;
+    font-weight: 400;
+}
+.oneNoteRemove {
+    position: absolute;
+    top: -5px;
+    right: 14px;
+    cursor: pointer;
+}
+.colorsExamples li {
+    display: inline-block;
+}
+.colorsExamples input {
+    display: none;
+}
+.colorsExamples label {
+    border: 1px solid transparent;
+    width: 30px;
+    height: 30px;
+    display: block;
+    margin-right: 10px;
+    cursor: pointer;
+}
+.colorsExamples label:hover {
+    border: 1px solid rgba(0,0,0,.6);
+    transition: 0.4s ease all;
+    -webkit-transition: 0.4s ease all;
+}
+.colorsExamples input:checked + label{
+    border: 1px solid black;
+}
+.pink {
+    background: #ff8585 !important;
+}
+.grey {
+    background: #cccccc !important;
+}
+.orange {
+    background: #ffa669 !important;
+}
+.lilac {
+    background: #cbbaff !important;
+}
+.blue {
+    background: #d0f0dd !important; 
+}
+/*Стили для категорий заметок в поле создания новой заметки*/
+/*крестик удаления 1 категории*/
+#categoryRemove {
+    cursor: pointer;
+}
