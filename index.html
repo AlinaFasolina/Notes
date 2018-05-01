@@ -2,7 +2,6 @@
 <html lang="ru">
 	<head>
 		<title>JS FOREVA!!!</title>
-	    <script src="all.js"></script>
 		<script
 	  	src="http://code.jquery.com/jquery-3.3.1.min.js"
 	  	integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
@@ -79,6 +78,12 @@
 				<p>Название категории:</p>
 				<input type="text" id="categoryName" value="" />
 			 </div>
+			<div class="creatorRow">
+				<p>Родительская категория:</p>
+				 <select size="4" name="hero">
+					<option value="option1" selected>Родительская категория отсутствует</option>
+				</select>
+			</div>
 			<button onclick="pushCategory()">Создать категорию</button>
 			<button onclick="clearAllCategories()">Удалить все категории</button>
 		</div>
@@ -113,29 +118,49 @@
 
 
 
-			/*изначально вызываем функции отображения всех заметок "showAllNotes" и категорий "showAllCategories"(описаны ниже)*/
+			/*изначально вызываем функции отображения всех заметок "showAllNotes",категорий "showAllCategories" и ярлыков "showAllLabels"(описаны ниже)*/
 			showAllNotes();
 			showAllCategories(); 
+			showAllLabels();
 		
-			$('#parentCategory').text(localStorage.getItem("categories").queue);
+			// $('#parentCategory').text(localStorage.getItem("categories").queue);
 			/*----------------------------------------------------------------------*/
 	    	/*ФУНКЦИЯ ДОБАВЛЕНИЯ НОВОЙ КАТЕГОРИИ*/
 			function pushCategory() {
-				if ($('#categoryName').val() !== '') {
-					/*если приложение запущены впервые, создаем новый объект "categories" с пустым массивом "queue", в котором будем хранить все категории заметок*/
-			    	if (localStorage.getItem("categories") === null) {
-					    /*Создаем объект categories - объект, в котором хранятся все категории*/	
-						var categories  = {
-							queue : [],
-						}
-						/*помещаем этот объект в localStorage(изначально объект пуст).*/
-						localStorage.setItem('categories', JSON.stringify(categories));
-			    	}
+				/*если приложение запущены впервые, создаем новый объект "categories" с пустым массивом "queue", в котором будем хранить все категории заметок*/
+		    	if (localStorage.getItem("categories") === null) {
+				    /*Создаем объект categories - объект, в котором хранятся все категории*/	
+					var categories  = {
+						queue : [],
+					}
+					/*помещаем этот объект в localStorage(изначально объект пуст).*/
+					localStorage.setItem('categories', JSON.stringify(categories));
 
-			    	/*если приложение запущено не впервые, то мы не создаем снова пустой объект с масивом категорий, а записываем категорию в существующий массив.*/
-			    	else {
-						/*преобразовали переменную categories, взятую из localstorage
-						в обычный объект(только так можно добавить в него новую категорию)*/
+					// проверяем ввел ли пользователь название категории в input
+					if ($('#categoryName').val() !== '') {
+
+						/*преобразовали переменную categories, взятую из localstorage в обычный объект*/
+						var allCategories = JSON.parse(localStorage.getItem('categories'));
+						/*добавили новую категорию в массив категорий(массив "queue" объекта "categories")*/
+						allCategories.queue.push({
+							name: $('#categoryName').val(),
+						})
+						/*поместили объект с добавленной новой категорией снова в localstorage*/
+						localStorage.setItem('categories',JSON.stringify(allCategories));
+						/*вывели все категории для заметок из localstorage*/
+						showAllCategories();
+					}
+					//если пользователь не ввел название категории - выводим сообщение об ошибке
+					else {
+						alert('поле с категорией пусто!');
+					}
+		    	}
+
+		    	/*если приложение запущено не впервые, то мы не создаем снова пустой объект с масивом категорий "categories", а записываем категорию в существующий массив.*/
+		    	else {
+					// проверяем ввел ли пользователь название категории в input
+					if ($('#categoryName').val() !== '') {
+						/*преобразовали переменную categories, взятую из localstorage в обычный объект*/
 						var allCategories = JSON.parse(localStorage.getItem('categories'));
 						/*добавили новую категорию в массив категорий(массив "queue" объекта "categories")*/
 						allCategories.queue.push({
@@ -146,28 +171,19 @@
 						localStorage.setItem('categories',JSON.stringify(allCategories));
 						/*вывели все категории для заметок из localstorage*/
 						showAllCategories();
- 					}
+					}
+					else {
+						alert('поле с категорией пусто!');
+					}
 				}
-				else {
-					alert('поле с категорией пусто!');
-				}
+				/*вызываем функцию отображения всех категорий*/
+				showAllCategories();
 			}
 			/*----------------------------------------------------------------------*/
 	    	/*ФУНКЦИЯ ДОБАВЛЕНИЯ НОВОГО ЯРЛЫКА*/
 			function pushLabel() {
-				if ($('#labelName').val() !== '') {
-					/*если приложение запущены впервые, создаем новый объект "labels" с пустым массивом "queue", в котором будем хранить все ярлыки заметок*/
-			    	if (localStorage.getItem("labels") === null) {
-					    /*Создаем объект labels - объект, в котором хранятся все ярлыки*/	
-						var labels  = {
-							queue : [],
-						}
-						/*помещаем этот объект в localStorage(изначально объект пуст).*/
-						localStorage.setItem('labels', JSON.stringify(labels));
-			    	}
-
-			    	/*если приложение запущено не впервые, то мы не создаем снова пустой объект с масивом ярлыков, а записываем ярлык в существующий массив.*/
-			    	else {
+					/*проверяем если поле с названием ярлыка не пусто, то добавляем ярлык в localstorage */
+					if ($('#labelName').val() !== '') {
 						/*преобразовали переменную labels, взятую из localstorage в обычный объект*/
 						var allLabels = JSON.parse(localStorage.getItem('labels'));
 						/*добавили новый ярлык в массив ярлыков(массив "queue" объекта "labels")*/
@@ -179,31 +195,49 @@
 						localStorage.setItem('labels',JSON.stringify(allLabels));
 						/*вывели все ярлыки для заметок из localstorage*/
 						showAllLabels();
- 					}
-				}
-				else {
-					alert('поле с ярлыком пусто!');
-				}
+					}
+					/*если поле с названием ярлыка пусто, отображаем ошибку*/
+					else {
+						alert('поле с ярлыком пусто!');
+					}
+		    
 			}
 			/*---------------------------------------------------------------------------------*/
 			/*ФУНКЦИЯ ОТОБРАЖЕНИЯ ВСЕХ СУЩЕСТВУЮЩИХ КАТЕГОРИЙ(выводятся из объекта categories)*/
 			function showAllCategories() {
-				var allCategories = JSON.parse(localStorage.getItem('categories'));
-				var outputs = "";
-			    for(var i = 0; i < allCategories.queue.length; i++) {
-			  	    outputs += '<li><input type="checkbox" name="categoryChoise"/><label>' + allCategories.queue[i].name + '</label><span id="categoryRemove" onclick="categoryRemove(this)"> X<span></li>';
-			    }
-			    document.getElementById("noteCategoryWrapper").innerHTML= outputs;
+		    	if (localStorage.getItem("categories") !== null) {
+					var allCategories = JSON.parse(localStorage.getItem('categories'));
+					var outputs = "";
+				    for(var i = 0; i < allCategories.queue.length; i++) {
+				  	    outputs += '<li><input type="checkbox" name="categoryChoise"/><label>' + allCategories.queue[i].name + '</label><span id="categoryRemove" onclick="categoryRemove(this)"> X<span></li>';
+				    }
+				    document.getElementById("noteCategoryWrapper").innerHTML= outputs;
+				}
 			}
 			/*---------------------------------------------------------------------------*/
 			/*ФУНКЦИЯ ОТОБРАЖЕНИЯ ВСЕХ СУЩЕСТВУЮЩИХ ЯРЛЫКОВ(выводятся из объекта labels)*/
 			function showAllLabels() {
-				var allLabels = JSON.parse(localStorage.getItem('labels'));
-				var outputs = "";
-			    for(var i = 0; i < allLabels.queue.length; i++) {
-			  	    outputs += '<li><input type="checkbox" name="labelChoise"/><label>' + allLabels.queue[i].name + '</label><span id="labelRemove" onclick="labelRemove(this)"> X<span></li>';
-			    }
-			    document.getElementById("noteLabelsWrapper").innerHTML= outputs;
+		    	if (localStorage.getItem("labels") == null) {
+		    		// alert('empty!');
+    				var labels  = {
+						queue : [{name: "спорт"}, {name: "музыка"}, {name: "книги"}],
+					}
+					localStorage.setItem('labels',JSON.stringify(labels));
+					var allLabels = JSON.parse(localStorage.getItem('labels'));
+					var outputs = "";
+				    for(var i = 0; i < allLabels.queue.length; i++) {
+				  	    outputs += '<li><input type="checkbox" name="labelChoise"/><label>' + allLabels.queue[i].name + '</label><span id="labelRemove" onclick="labelRemove(this)"> X<span></li>';
+				    }
+				    document.getElementById("noteLabelsWrapper").innerHTML= outputs;
+				}
+				else {
+					var allLabels = JSON.parse(localStorage.getItem('labels'));
+					var outputs = "";
+				    for(var i = 0; i < allLabels.queue.length; i++) {
+				  	    outputs += '<li><input type="checkbox" name="labelChoise"/><label>' + allLabels.queue[i].name + '</label><span id="labelRemove" onclick="labelRemove(this)"> X<span></li>';
+				    }
+				    document.getElementById("noteLabelsWrapper").innerHTML= outputs;
+				}
 			}
 			/*--------------------------------------------------------------------------------------*/
 			/*ФУНКЦИЯ УДАЛЕНИЯ ВЫБРАННОЙ КАТЕГОРИЙ ЗАМЕТОК(по нажатию на крестик рядом с категорией)*/
@@ -266,7 +300,7 @@
 				var allLabels = JSON.parse(localStorage.getItem('labels'));
 				/*очищаем массив с ярлыками*/
 				var allLabels ={
-					queue:[]
+					queue : [{name: "спорт"}, {name: "музыка"}, {name: "книги"}],
 				}
 				//помещаем очищенный объект ярлыков "labels" в localStorage
 				localStorage.setItem('labels',JSON.stringify(allLabels));
@@ -364,7 +398,7 @@
 				    var allNotes = JSON.parse(localStorage.getItem('notes'));
 				    var outputs = "";
 				    for(var i = 0; i < allNotes.queue.length; i++) {
-				  	    outputs += '<div class="oneNote' +' '+ allNotes.queue[i].color + '" id="' + allNotes.queue[i].id + '"><p>' + allNotes.queue[i].id + '</p><p class="oneNoteTitle" onclick="changeNoteTitle(this)">' + allNotes.queue[i].name + '</p><p class="oneNoteText" onclick="changeNoteText(this)">' + allNotes.queue[i].text + '</p><p class="oneNoteCategory">' + allNotes.queue[i].category + '</p><p class="oneNoteLabel">' + allNotes.queue[i].label + '</p><p onclick="oneNoteRemove(this)" class="oneNoteRemove">X</p></div>';
+				  	    outputs += '<div class="oneNote' +' '+ allNotes.queue[i].color + '" id="' + allNotes.queue[i].id + '"><p class="oneNoteTitle" onclick="changeNoteTitle(this)"><span></span>' + allNotes.queue[i].name + '</p><p class="oneNoteText" onclick="changeNoteText(this)">' + allNotes.queue[i].text + '</p><p class="oneNoteCategory">' + allNotes.queue[i].category + '</p><p class="oneNoteLabel">' + allNotes.queue[i].label + '</p><p onclick="oneNoteRemove(this)" class="oneNoteRemove">X</p></div>';
 				    }
 				    document.getElementById("notesWrapper").innerHTML= outputs;
 				}
