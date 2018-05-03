@@ -1,15 +1,74 @@
+@font-face {
+    font-family: Lato-Light;
+    src: url(fonts/Lato-Light.ttf);
+}
+body {
+    font-family: Lato-Light;
+}
 ul {
     padding-left: 0;
     list-style: none;
 }
+input,
+select {
+    outline: none;
+}
+.creatorsWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+/*creator - класс для 3 блоков: создания категорий заметок, создания самих заметок, создания ярлыков для заметок*/
 .creator {
-    border: 1px solid black;
+    margin: 10px;
+    border: 1px solid #25252547;
+    border-radius: 3px;
     display: inline-block;
     padding: 10px;
-    margin-bottom: 20px;    
+    -webkit-box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.75);
+    box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.45);
+}
+.creatorTitle {
+    font-size: 26px;
+}
+.creator button {
+    font-size: 12px;
+    border: 1px solid #ff8282;
+    background: #ff8282;
+    color: #fff;
+    padding: 8px;
+    text-transform: uppercase;
+    transition: all 0.4s;
+    -webkit-transition: all 0.4s;
+    cursor: pointer;
+    outline: none;
+    border-radius: 3px;
+}
+.creator button:hover {
+    background: #fff ;
+    color: #ff8282;
+}
+.creator input[type="text"] {
+    width: 99%;
+}
+.creator textarea {
+    width: 98%;
+
+}
+.creator select {
+    width: 99%;
 }
 .creatorRow {
     margin-bottom: 10px;  
+}
+.buttonsRow {
+    display: flex;
+    justify-content: space-between;
+}
+.buttonsRow button:nth-child(1) {
+    margin-right: 10px;
 }
 .creatorRow p {
     text-align: center;
@@ -19,22 +78,36 @@ ul {
     display: inline-block;
     
 }
-#notesWrapper {
-    display: flex;
+.categoryName {
+    padding-right: 30px;
 }
+#notesWrapper {
+    justify-content: space-around;
+    max-width: 1200px;
+    display: flex;
+    margin: auto;
+    flex-wrap: wrap;
+}
+/*oneNote - блок 1-й затетки*/
 .oneNote {
     padding: 10px;
     background: #ccc;
     width: 250px;
-    margin-right: 30px;
     position: relative;
+    margin-bottom: 30px;
+    -webkit-box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.75);
+    box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.45);
+}
+.oneNote .fa-times {
+        color: #6d6d6d;
 }
 .oneNote p {
     word-break: break-all;
     text-align: center;
 }
 .oneNoteTitle {
-    font-size: 20px;
+    font-size: 24px;
     font-weight: 400;
 }
 .oneNoteRemove {
@@ -65,8 +138,9 @@ ul {
 .colorsExamples input:checked + label{
     border: 1px solid black;
 }
+/*Цвета заметок*/
 .pink {
-    background: #ff8585 !important;
+    background: #ff8282 !important;
 }
 .grey {
     background: #cccccc !important;
@@ -80,8 +154,29 @@ ul {
 .blue {
     background: #d0f0dd !important; 
 }
-/*Стили для категорий заметок в поле создания новой заметки*/
-/*крестик удаления 1 категории*/
-#categoryRemove {
+/*Крестик удаления*/
+.fa-times {
+    font-weight: 900;
+    color: #d2d1d1;
+    padding-left: 5px;
     cursor: pointer;
+    transition: 0.4s ease all;
+    -webkit-transition: 0.4s ease all;
+}
+.fa-times:hover {
+    color: #afafaf;
+}
+@media (max-width: 1250px) {
+    .creatorsWrapper {
+        flex-direction: column;
+    }
+    #categoryCreator {
+        order: 1;
+    }
+    #noteCreator {
+        order: 3;        
+    }
+    #labelCreator {
+        order: 2;
+    }
 }

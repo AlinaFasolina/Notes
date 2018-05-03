@@ -2,130 +2,140 @@
 <html lang="ru">
 	<head>
 		<title>JS FOREVA!!!</title>
+		<meta charset="utf-8">
 		<script
 	  	src="http://code.jquery.com/jquery-3.3.1.min.js"
 	  	integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-	  	crossorigin="anonymous"></script>
-		<link rel="stylesheet" href="style.css">
-
+	  	crossorigin="anonymous"></script><!-- подключение jquery-->
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous"><!--подключение иконок fontawesome-->
+		<link rel="stylesheet" href="style.css"><!--подключение основных стилей-->
 	</head>
 	<body>
-		<!-- БЛОК ДЛЯ СОЗДАНИЯ ЗАМЕТКИ -->
-		<div class="creator">
-			<!-- Название заметки -->
-			<div class="creatorRow">Создать заметку</div>
+		<!-- Блок-обвертка для 3-х блоков: блок cоздания категорий для заметок, блок cоздания самих заметок, блок cоздания ярлыков для заметок -->
+		<div class="creatorsWrapper">
+			<!-- БЛОК ДЛЯ СОЗДАНИЯ КАТЕГОРИИ ЗАМЕТКИ -->
+			<div class="creator" id="categoryCreator">
+				<div class="creatorRow creatorTitle">Создать категорию:</div>
+				<div class="creatorRow">
+					<p class="categoryName">Название категории:</p>
+					<input type="text" id="categoryName" value="" />
+				 </div>
+				<div class="creatorRow">
+					<p>Родительская категория:</p>
+					 <select id="selectParentCategory" size="4" name="hero">
+						<option value="option1" id="rootCategory" selected>Родительская категория отсутствует</option>
+					</select>
+				</div>
+				<div class="buttonsRow">
+					<button onclick="pushCategory()">Создать категорию</button>
+					<button onclick="clearAllCategories()">Удалить все категории</button>
+				</div>
+			</div><!--конец блока creator-->
 
-			<div class="creatorRow">
-				<p>Название:</p>
-				<input type="text" id="noteName" value="" />
-			 </div>
- 			<!-- Текст заметки -->
-			<div class="creatorRow noteTitle">
-				<p>Текст:</p>
-				<textarea id="noteText"></textarea>
-			</div>
+			<!-- БЛОК ДЛЯ СОЗДАНИЯ ЗАМЕТКИ -->
+			<div class="creator" id="noteCreator">
+				<!-- Название заметки -->
+				<div class="creatorRow creatorTitle">Создать заметку:</div>
 
-			<!-- Цвет заметки -->
-			<div class="colors">
-				<p>Цвет:</p>
-				<div class="colorsExamples">
-					<ul class="colorsExamples">
-					    <li>
-					        <input type='radio' value='pink' name='colorChoise' id='radio1'/>
-					        <label class="pink" for='radio1'></label>
-					    </li>
-					    <li>
-					        <input type='radio' value='grey' name='colorChoise'  id='radio2'/>
-					        <label class="grey" for='radio2'></label>
-					    </li>
-					    <li>
-					        <input type='radio' value='orange' name='colorChoise'  id='radio3'/>
-					        <label class="orange" for='radio3'></label>
-					    </li>
-					    <li>
-					        <input type='radio' value='lilac' name='colorChoise'  id='radio4'/>
-					        <label class="lilac" for='radio4'></label>
-					    </li>
-					    <li>
-					        <input type='radio' value='blue' name='colorChoise'  id='radio5'/>
-					        <label class="blue" for='radio5'></label>
-					    </li>
-					</ul>
-				</div><!--конец блока colorsExamples-->
-			</div><!--конец блока colors-->
+				<div class="creatorRow">
+					<p>Название:</p>
+					<input type="text" id="noteName" value="" />
+				 </div>
+	 			<!-- Текст заметки -->
+				<div class="creatorRow noteTitle">
+					<p>Текст:</p>
+					<textarea id="noteText"></textarea>
+				</div>
 
-			<!-- Категория заметки -->
-			<div id="noteCategory">
-				<p>Категория:</p>
-				<ul id="noteCategoryWrapper"></ul>
-			</div>
+				<!-- Цвет заметки -->
+				<div class="colors">
+					<p>Цвет:</p>
+					<div class="colorsExamples">
+						<ul class="colorsExamples">
+						    <li>
+						        <input type='radio' value='pink' name='colorChoise' id='radio1'/>
+						        <label class="pink" for='radio1'></label>
+						    </li>
+						    <li>
+						        <input type='radio' value='grey' name='colorChoise'  id='radio2'/>
+						        <label class="grey" for='radio2'></label>
+						    </li>
+						    <li>
+						        <input type='radio' value='orange' name='colorChoise'  id='radio3'/>
+						        <label class="orange" for='radio3'></label>
+						    </li>
+						    <li>
+						        <input type='radio' value='lilac' name='colorChoise'  id='radio4'/>
+						        <label class="lilac" for='radio4'></label>
+						    </li>
+						    <li>
+						        <input type='radio' value='blue' name='colorChoise'  id='radio5'/>
+						        <label class="blue" for='radio5'></label>
+						    </li>
+						</ul>
+					</div><!--конец блока colorsExamples-->
+				</div><!--конец блока colors-->
 
-			<!-- Ярлык заметки -->
-			<div id="noteCategory">
-				<p>Ярлык:</p>
-				<ul id="noteLabelsWrapper"></ul>
-			</div>
+				<!-- Категория заметки -->
+				<div id="noteCategory">
+					<p>Категория:</p>
+					<ul id="noteCategoryWrapper"></ul>
+				</div>
 
-			<button onclick="pushNote()" id="createNoteBtn">Создать заметку</button>
-			<button onclick="clearAllNotes()">Удалить все заметки</button>
+				<!-- Ярлык заметки -->
+				<div id="noteCategory">
+					<p>Ярлык:</p>
+					<ul id="noteLabelsWrapper"></ul>
+				</div>
+				<div class="buttonsRow">
+					<button onclick="pushNote()" id="createNoteBtn">Создать заметку</button>
+					<button onclick="clearAllNotes()">Удалить все заметки</button>
+				</div>
+			</div><!--конец блока creator-->
 
-		</div><!--конец блока creator-->
+			<!-- БЛОК ДЛЯ СОЗДАНИЯ ЯРЛЫКОВ заметки -->
+			<div class="creator" id="labelCreator">
+				<div class="creatorRow creatorTitle">Создать ярлык:</div>
+				<div class="creatorRow">
+					<p>Название ярлыка:</p>
+					<input type="text" id="labelName" value="" />
+				 </div>
+				<div class="buttonsRow">
+					<button onclick="pushLabel()">Создать ярлык</button>
+					<button onclick="clearAllLabels()">Удалить все ярлыки</button>
+				</div>
 
-		<!-- БЛОК ДЛЯ СОЗДАНИЯ КАТЕГОРИИ заметки -->
-		<div class="creator">
-			<div class="creatorRow">Создать категорию</div>
-			<div class="creatorRow">
-				<p>Название категории:</p>
-				<input type="text" id="categoryName" value="" />
-			 </div>
-			<div class="creatorRow">
-				<p>Родительская категория:</p>
-				 <select size="4" name="hero">
-					<option value="option1" selected>Родительская категория отсутствует</option>
-				</select>
-			</div>
-			<button onclick="pushCategory()">Создать категорию</button>
-			<button onclick="clearAllCategories()">Удалить все категории</button>
-		</div>
-
-		<!-- БЛОК ДЛЯ СОЗДАНИЯ ЯРЛЫКОВ заметки -->
-		<div class="creator">
-			<div class="creatorRow">Создать ярлык</div>
-			<div class="creatorRow">
-				<p>Название ярлыка:</p>
-				<input type="text" id="labelName" value="" />
-			 </div>
-			<button onclick="pushLabel()">Создать ярлык</button>
-			<button onclick="clearAllLabels()">Удалить все ярлыки</button>
-		</div>
-	
+			</div><!--конец блока creator-->
+		</div><!--конец блока wrapper-->
 
 		<!-- ЗАМЕТКИ -->
 		<div id="notesWrapper"></div>	
-
-
 	    <script>
 			/*НАВИГАЦИЯ:
 			ниже описаны основные функции приложения:
-			1)pushCategory - добаление новой категории для заметок в localStorage.
-			2)clearAllCategories - удаление всех сущестующих категорий заметок(из localStorage).
-			3)pushNote - добаление новой заметки в localStorage.
-			4)clearAllNotes - удаление всех сущестующих заметок(из localStorage).
-			5)showAllNotes - отображение всех существующих заметок(выводятся из localStorage).
-			6)oneNoteRemove - удаление текущей заметки по нажатию на крестик(из localStorage).
+			1)pushCategory - функция добавления новой категории для заметок в localStorage.
+			2)pushLabel - функция добавления нового ярлыка.
+			3)showAllCategories - функция отображения всех созданных категорий(выводятся из объекта categories внутри localStorage).
+			4)showAllLabels - функция отображения всех ярлыков(стандартные + созданные пользователем, выводятся из объекта labels внутри localStorage).
+			5)categoryRemove - функция удаления выбранной категорий заметок(по нажатию на значок рядом с категорией).
+			6)labelRemove - функция удаления выбранного ярлыка заметок(по нажатию на значок рядом с ярлыком).
+			7)clearAllCategories - функция удаления всех существующих категорий заметок.
+			8)clearAllLabels - функция удаления всех существующих ярлыков заметок.
+			9)pushNote - функция добавления новой заметки в объект notes внутрь localstorage.
+			10)clearAllNotes - функция очищения всех существующих заметок.
+			11)showAllNotes - функция отображения всех существующих заметок(выводятся из объекта notes).
+			12)oneNoteRemove - функция удаления текущей заметки по нажатию на значок в углу заметки.
+			13)changeNoteTitle - функция изменения заголовка текущей заметки по нажатию на него.
+			14)changeNoteText - функция изменения текста текущей заметки по нажатию на него.
 			*/
-
-
-
 
 			/*изначально вызываем функции отображения всех заметок "showAllNotes",категорий "showAllCategories" и ярлыков "showAllLabels"(описаны ниже)*/
 			showAllNotes();
 			showAllCategories(); 
 			showAllLabels();
-		
-			// $('#parentCategory').text(localStorage.getItem("categories").queue);
-			/*----------------------------------------------------------------------*/
-	    	/*ФУНКЦИЯ ДОБАВЛЕНИЯ НОВОЙ КАТЕГОРИИ*/
+			/*---------------------------------------
+	    		1)ФУНКЦИЯ ДОБАВЛЕНИЯ НОВОЙ КАТЕГОРИИ
+	    	----------------------------------------*/
 			function pushCategory() {
 				/*если приложение запущены впервые, создаем новый объект "categories" с пустым массивом "queue", в котором будем хранить все категории заметок*/
 		    	if (localStorage.getItem("categories") === null) {
@@ -160,17 +170,40 @@
 		    	else {
 					// проверяем ввел ли пользователь название категории в input
 					if ($('#categoryName').val() !== '') {
-						/*преобразовали переменную categories, взятую из localstorage в обычный объект*/
-						var allCategories = JSON.parse(localStorage.getItem('categories'));
-						/*добавили новую категорию в массив категорий(массив "queue" объекта "categories")*/
-						allCategories.queue.push({
-							name: $('#categoryName').val(),
-						})
+						/*проверяем выбрал ли пользователь внутри selectа родительской категории
+						опцию "Родительская категория отсутствует".Если да, то в поле "parent" текущей категории вписываем -1.
+						это значит что мы добавим текущую категорию в select как родительскую(у нее самой нет родителей).
+						По умолчанию атрибут selected установлен на поле "Родительская категория отсутствует".*/
+						if ($( "option:selected" ).attr('value') == "option1") {
+							/*преобразовали переменную categories, взятую из localstorage в обычный объект*/
+							var allCategories = JSON.parse(localStorage.getItem('categories'));
+							/*добавили новую категорию в массив категорий(массив "queue" объекта "categories")*/
+							allCategories.queue.push({
+								name: $('#categoryName').val(),
+								parent: -1
+							})
+							/*поместили объект с добавленной новой категорией снова в localstorage*/
+							localStorage.setItem('categories',JSON.stringify(allCategories));
+							/*вывели все категории для заметок из localstorage*/
+							showAllCategories();
+						}
+						/*если пользователь выбрал родительскую категорию из selecta, тогда мы вписываем ее в 
+						поле для создания заметки как подкатегорию родительской категории. А в localstorage
+						записываем что у этой категории есть родитель, в поле "parent:" */
+						else {
+							/*преобразовали переменную categories, взятую из localstorage в обычный объект*/
+							var allCategories = JSON.parse(localStorage.getItem('categories'));
+							/*добавили новую категорию в массив категорий(массив "queue" объекта "categories")*/
+							allCategories.queue.push({
+								name: $('#categoryName').val(),
+								parent: $( "option:selected" ).text()
+							})
+							/*поместили объект с добавленной новой категорией снова в localstorage*/
+							localStorage.setItem('categories',JSON.stringify(allCategories));
+							/*вывели все категории для заметок из localstorage*/
+							showAllCategories();
+						}
 
-						/*поместили объект с добавленной новой категорией снова в localstorage*/
-						localStorage.setItem('categories',JSON.stringify(allCategories));
-						/*вывели все категории для заметок из localstorage*/
-						showAllCategories();
 					}
 					else {
 						alert('поле с категорией пусто!');
@@ -178,44 +211,77 @@
 				}
 				/*вызываем функцию отображения всех категорий*/
 				showAllCategories();
-			}
-			/*----------------------------------------------------------------------*/
-	    	/*ФУНКЦИЯ ДОБАВЛЕНИЯ НОВОГО ЯРЛЫКА*/
-			function pushLabel() {
-					/*проверяем если поле с названием ярлыка не пусто, то добавляем ярлык в localstorage */
-					if ($('#labelName').val() !== '') {
-						/*преобразовали переменную labels, взятую из localstorage в обычный объект*/
-						var allLabels = JSON.parse(localStorage.getItem('labels'));
-						/*добавили новый ярлык в массив ярлыков(массив "queue" объекта "labels")*/
-						allLabels.queue.push({
-							name: $('#labelName').val(),
-						})
 
-						/*поместили объект с добавленный новым ярлыком снова в localstorage*/
-						localStorage.setItem('labels',JSON.stringify(allLabels));
-						/*вывели все ярлыки для заметок из localstorage*/
-						showAllLabels();
-					}
-					/*если поле с названием ярлыка пусто, отображаем ошибку*/
-					else {
-						alert('поле с ярлыком пусто!');
-					}
-		    
+				/*в момент добавляения новой категории перебираем циклом все добавленные в localStorage категории.
+				Если у категории нет родителя(parent: -1), тогда вписываем ее в select option*/
+				var allCategories = JSON.parse(localStorage.getItem('categories'));
+				var outputs = "";
+				    for(var i = 0; i < allCategories.queue.length; i++) {
+				    	if (allCategories.queue[i].parent == -1) {
+					  	    outputs += '<option>' + allCategories.queue[i].name + '</option>';
+				    	}
+				    }
+				document.getElementById("selectParentCategory").innerHTML='<option value="option1" id="rootCategory" selected>Родительская категория отсутствует</option>' + outputs;
+			    
+
+			    /*если категория дочерняя для какой-то родительской, то в поле создания заметки
+			    дочерняя категория будет находить внутри родительской.*/
+				var allCategories = JSON.parse(localStorage.getItem('categories'));
+				var output = "";
+				/*создаем двойной цикл внутри массива категорий, и если поле parent 
+				какой-то категории совпало с полем name другой категории, 
+				то первое поле- дочернее для второго.*/
+			    for(var i = 0; i < allCategories.queue.length; i++) {
+			    	for(var j = 0; j < allCategories.queue.length; j++) {
+			    		if (allCategories.queue[i].parent == allCategories.queue[j].name) {
+			    			console.log(allCategories.queue[i].name + 'это ребенок' + allCategories.queue[j].name);
+					  	    output = '<option>' + allCategories.queue[i].name + '</option>';
+			    		}
+			    	}
+			    }
+				console.log(allCategories);
+
+
 			}
-			/*---------------------------------------------------------------------------------*/
-			/*ФУНКЦИЯ ОТОБРАЖЕНИЯ ВСЕХ СУЩЕСТВУЮЩИХ КАТЕГОРИЙ(выводятся из объекта categories)*/
+			/*-------------------------------------
+	    		2)ФУНКЦИЯ ДОБАВЛЕНИЯ НОВОГО ЯРЛЫКА
+	    	--------------------------------------*/
+			function pushLabel() {
+				/*проверяем если поле с названием ярлыка не пусто, то добавляем ярлык в localstorage */
+				if ($('#labelName').val() !== '') {
+					/*преобразовали переменную labels, взятую из localstorage в обычный объект*/
+					var allLabels = JSON.parse(localStorage.getItem('labels'));
+					/*добавили новый ярлык в массив ярлыков(массив "queue" объекта "labels")*/
+					allLabels.queue.push({
+						name: $('#labelName').val(),
+					})
+
+					/*поместили объект с добавленный новым ярлыком снова в localstorage*/
+					localStorage.setItem('labels',JSON.stringify(allLabels));
+					/*вывели все ярлыки для заметок из localstorage*/
+					showAllLabels();
+				}
+				/*если поле с названием ярлыка пусто, отображаем ошибку*/
+				else {
+					alert('поле с ярлыком пусто!');
+				}
+			}
+			/*--------------------------------------------------------------------------------------
+				3)ФУНКЦИЯ ОТОБРАЖЕНИЯ ВСЕХ СОЗДАННЫХ КАТЕГОРИЙ(выводятся из объекта categories)
+			---------------------------------------------------------------------------------------*/
 			function showAllCategories() {
 		    	if (localStorage.getItem("categories") !== null) {
 					var allCategories = JSON.parse(localStorage.getItem('categories'));
 					var outputs = "";
 				    for(var i = 0; i < allCategories.queue.length; i++) {
-				  	    outputs += '<li><input type="checkbox" name="categoryChoise"/><label>' + allCategories.queue[i].name + '</label><span id="categoryRemove" onclick="categoryRemove(this)"> X<span></li>';
+				  	    outputs += '<li><input type="checkbox" name="categoryChoise"/><label>' + allCategories.queue[i].name + '</label><span id="categoryRemove" onclick="categoryRemove(this)"> <i class="fas fa-times"></i><span></li>';
 				    }
 				    document.getElementById("noteCategoryWrapper").innerHTML= outputs;
 				}
 			}
-			/*---------------------------------------------------------------------------*/
-			/*ФУНКЦИЯ ОТОБРАЖЕНИЯ ВСЕХ СУЩЕСТВУЮЩИХ ЯРЛЫКОВ(выводятся из объекта labels)*/
+			/*---------------------------------------------------------------------------------
+				4)ФУНКЦИЯ ОТОБРАЖЕНИЯ ВСЕХ СУЩЕСТВУЮЩИХ ЯРЛЫКОВ(выводятся из объекта labels)
+			---------------------------------------------------------------------------------*/
 			function showAllLabels() {
 		    	if (localStorage.getItem("labels") == null) {
 		    		// alert('empty!');
@@ -226,7 +292,7 @@
 					var allLabels = JSON.parse(localStorage.getItem('labels'));
 					var outputs = "";
 				    for(var i = 0; i < allLabels.queue.length; i++) {
-				  	    outputs += '<li><input type="checkbox" name="labelChoise"/><label>' + allLabels.queue[i].name + '</label><span id="labelRemove" onclick="labelRemove(this)"> X<span></li>';
+				  	    outputs += '<li><input type="checkbox" name="labelChoise"/><label>' + allLabels.queue[i].name + '</label><span id="labelRemove" onclick="labelRemove(this)"> <i class="fas fa-times"></i><span></li>';
 				    }
 				    document.getElementById("noteLabelsWrapper").innerHTML= outputs;
 				}
@@ -234,13 +300,14 @@
 					var allLabels = JSON.parse(localStorage.getItem('labels'));
 					var outputs = "";
 				    for(var i = 0; i < allLabels.queue.length; i++) {
-				  	    outputs += '<li><input type="checkbox" name="labelChoise"/><label>' + allLabels.queue[i].name + '</label><span id="labelRemove" onclick="labelRemove(this)"> X<span></li>';
+				  	    outputs += '<li><input type="checkbox" name="labelChoise"/><label>' + allLabels.queue[i].name + '</label><span id="labelRemove" onclick="labelRemove(this)"> <i class="fas fa-times"></i><span></li>';
 				    }
 				    document.getElementById("noteLabelsWrapper").innerHTML= outputs;
 				}
 			}
-			/*--------------------------------------------------------------------------------------*/
-			/*ФУНКЦИЯ УДАЛЕНИЯ ВЫБРАННОЙ КАТЕГОРИЙ ЗАМЕТОК(по нажатию на крестик рядом с категорией)*/
+			/*----------------------------------------------------------------------------------------------
+				5)ФУНКЦИЯ УДАЛЕНИЯ ВЫБРАННОЙ КАТЕГОРИЙ ЗАМЕТОК(по нажатию на значок рядом с категорией)
+			----------------------------------------------------------------------------------------------*/
 			function categoryRemove(element) {
 				/*получаем название текущей категории*/
 				var currentCategoryName = $(element).parent().find('label').text();
@@ -259,8 +326,9 @@
 			    	}
 			    }
 			}
-			/*--------------------------------------------------------------------------------------*/
-			/*ФУНКЦИЯ УДАЛЕНИЯ ВЫБРАННОГО ЯРЛЫКА ЗАМЕТОК(по нажатию на крестик рядом с ярлыком)*/
+			/*----------------------------------------------------------------------------------------
+				6)ФУНКЦИЯ УДАЛЕНИЯ ВЫБРАННОГО ЯРЛЫКА ЗАМЕТОК(по нажатию на значок рядом с ярлыком)
+			----------------------------------------------------------------------------------------*/
 			function labelRemove(element) {
 				/*получаем название текущего ярлыка*/
 				var currentLabelName = $(element).parent().find('label').text();
@@ -279,8 +347,9 @@
 			    	}
 			    }
 			}
-			/*----------------------------------------------------------------------*/
-			/*ФУНКЦИЯ УДАЛЕНИЯ ВСЕХ СУЩЕСТВУЮЩИХ КАТЕГОРИЙ ЗАМЕТОК*/
+			/*------------------------------------------------------------
+				7)ФУНКЦИЯ УДАЛЕНИЯ ВСЕХ СУЩЕСТВУЮЩИХ КАТЕГОРИЙ ЗАМЕТОК
+			-------------------------------------------------------------*/
 			function clearAllCategories() {
 				// извлекаем из localStorage объект "categories" с массивом категорий
 				var allCategories = JSON.parse(localStorage.getItem('categories'));
@@ -292,9 +361,12 @@
 				localStorage.setItem('categories',JSON.stringify(allCategories));
 				//отображаем обновленные категории в поле создания заметки
 			    showAllCategories();
+			    /*удаляем все родительские категории из select option меню в поле создания категории*/
+			    $('#selectParentCategory option:not(#rootCategory)').remove();
 			}
-			/*----------------------------------------------------------------------*/
-			/*ФУНКЦИЯ УДАЛЕНИЯ ВСЕХ СУЩЕСТВУЮЩИХ ЯРЛЫКОВ ЗАМЕТОК*/
+			/*---------------------------------------------------------
+				8)ФУНКЦИЯ УДАЛЕНИЯ ВСЕХ СУЩЕСТВУЮЩИХ ЯРЛЫКОВ ЗАМЕТОК
+			---------------------------------------------------------*/
 			function clearAllLabels() {
 				// извлекаем из localStorage объект "labels" с массивом ярлыков
 				var allLabels = JSON.parse(localStorage.getItem('labels'));
@@ -308,8 +380,9 @@
 				showAllLabels(); 
 			}
 					
-			/*----------------------------------------------------------------------*/
-			/*ФУНКЦИЯ ДОБАВЛЕНИЯ НОВОЙ ЗАМЕТКИ В ОБЪЕКТ NOTES ВНУТРЬ LOCALSTORAGE*/
+			/*-------------------------------------------------------------------------
+				9)ФУНКЦИЯ ДОБАВЛЕНИЯ НОВОЙ ЗАМЕТКИ В ОБЪЕКТ NOTES ВНУТРЬ LOCALSTORAGE
+			-------------------------------------------------------------------------*/
 			function pushNote() {
 	    		/* подсчитываем количество нажатий на кнопку "создать заметку"; эти числа - индексы новых заметок*/
 	    		if(typeof(Storage) !== "undefined") {
@@ -369,8 +442,9 @@
 				/*вызываем функцию отображения всех заметок*/
 				showAllNotes();
 			}
-			/*----------------------------------------------------------------------*/
-			/*ФУНКЦИЯ ОЧИЩЕНИЯ ВСЕ СУЩЕСТВУЮЩИХ ЗАМЕТОК.*/
+			/*------------------------------------------------
+				10)ФУНКЦИЯ ОЧИЩЕНИЯ ВСЕХ СУЩЕСТВУЮЩИХ ЗАМЕТОК
+			-------------------------------------------------*/
 			function clearAllNotes() {
 				var allNotes = JSON.parse(localStorage.getItem('notes'));
 				var allNotes ={
@@ -381,8 +455,9 @@
 				/*вызываем функцию отображения всех заметок*/
 				showAllNotes();
 			}
-			/*----------------------------------------------------------------------*/
-			/*ФУНКЦИЯ ОТОБРАЖЕНИЯ ВСЕХ СУЩЕСТВУЮЩИХ ЗАМЕТОК(выводятся из объекта notes)*/
+			/*--------------------------------------------------------------------------------
+				11)ФУНКЦИЯ ОТОБРАЖЕНИЯ ВСЕХ СУЩЕСТВУЮЩИХ ЗАМЕТОК(выводятся из объекта notes)
+			---------------------------------------------------------------------------------*/
 			function showAllNotes() {
 				/*если приложение запущены впервые, создаем новый объект "notes" с пустым массивом "queue", в котором будем хранить все заметки*/
 		    	if (localStorage.getItem("notes") === null) {
@@ -398,16 +473,17 @@
 				    var allNotes = JSON.parse(localStorage.getItem('notes'));
 				    var outputs = "";
 				    for(var i = 0; i < allNotes.queue.length; i++) {
-				  	    outputs += '<div class="oneNote' +' '+ allNotes.queue[i].color + '" id="' + allNotes.queue[i].id + '"><p class="oneNoteTitle" onclick="changeNoteTitle(this)"><span></span>' + allNotes.queue[i].name + '</p><p class="oneNoteText" onclick="changeNoteText(this)">' + allNotes.queue[i].text + '</p><p class="oneNoteCategory">' + allNotes.queue[i].category + '</p><p class="oneNoteLabel">' + allNotes.queue[i].label + '</p><p onclick="oneNoteRemove(this)" class="oneNoteRemove">X</p></div>';
+				  	    outputs += '<div class="oneNote' +' '+ allNotes.queue[i].color + '" id="' + allNotes.queue[i].id + '"><p class="oneNoteTitle" onclick="changeNoteTitle(this)"><span></span>' + allNotes.queue[i].name + '</p><p class="oneNoteText" onclick="changeNoteText(this)">' + allNotes.queue[i].text + '</p><p class="oneNoteCategory"><span>Категории: </span><span>' + allNotes.queue[i].category + '</span></p><p class="oneNoteLabel"><span>Ярлыки: </span><span>' + allNotes.queue[i].label + '</span></p><p onclick="oneNoteRemove(this)" class="oneNoteRemove"><i class="fas fa-times"></i></p></div>';
 				    }
 				    document.getElementById("notesWrapper").innerHTML= outputs;
 				}
 			}
 
-			/*----------------------------------------------------------------------*/
-			/*ФУНКЦИЯ УДАЛЕНИЯ ТЕКУЩЕЙ ЗАМЕТКИ ПО НАЖАТИЮ НА КРЕСТИК*/
+			/*----------------------------------------------------------------------------
+				12)ФУНКЦИЯ УДАЛЕНИЯ ТЕКУЩЕЙ ЗАМЕТКИ ПО НАЖАТИЮ НА ЗНАЧОК В УГЛУ ЗАМЕТКИ
+			-----------------------------------------------------------------------------*/
 			function oneNoteRemove(element) {
-				/*получаем индекс текущей заметки(обращаемся к id родительского елемента крестика)*/
+				/*получаем индекс текущей заметки(обращаемся к id родительского елемента значока)*/
 				var currentNoteIndex = $(element).parent().attr('id');
 				// извлекаем из localStorage объект со всеми заметками
 			    var allNotes = JSON.parse(localStorage.getItem('notes'));
@@ -423,8 +499,9 @@
 			    	}
 			    }
 			}
-			/*----------------------------------------------------------------------*/
-			/*ФУНКЦИЯ ИЗМЕНЕНИЯ ЗАГОЛОВКА ТЕКУЩЕЙ ЗАМЕТКИ ПО НАЖАТИЮ НА НЕГО*/
+			/*----------------------------------------------------------------------
+				13)ФУНКЦИЯ ИЗМЕНЕНИЯ ЗАГОЛОВКА ТЕКУЩЕЙ ЗАМЕТКИ ПО НАЖАТИЮ НА НЕГО
+			----------------------------------------------------------------------*/
 			function changeNoteTitle(element) {
 				/*извлекаем текущий заголовом заметки*/
 				var currentNoteTitle = ($(element).text());
@@ -454,8 +531,9 @@
 					alert('новый заголовок отсутствует!');
 				}
 			}
-			/*----------------------------------------------------------------------*/
-			/*ФУНКЦИЯ ИЗМЕНЕНИЯ ТЕКСТА ТЕКУЩЕЙ ЗАМЕТКИ ПО НАЖАТИЮ НА НЕГО*/
+			/*--------------------------------------------------------------------
+				14)ФУНКЦИЯ ИЗМЕНЕНИЯ ТЕКСТА ТЕКУЩЕЙ ЗАМЕТКИ ПО НАЖАТИЮ НА НЕГО
+			--------------------------------------------------------------------*/
 			function changeNoteText(element) {
 				/*извлекаем текущий текст заметки*/
 				var currentNoteText = ($(element).text());
