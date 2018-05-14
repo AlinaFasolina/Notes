@@ -62,6 +62,7 @@ select {
 }
 .creatorRow {
     margin-bottom: 10px;  
+    max-width: 400px;
 }
 .buttonsRow {
     display: flex;
@@ -80,6 +81,9 @@ select {
 }
 .categoryName {
     padding-right: 30px;
+}
+#categoryName {
+    margin-bottom: 15px;
 }
 #notesWrapper {
     justify-content: space-around;
@@ -166,6 +170,27 @@ select {
 .fa-times:hover {
     color: #afafaf;
 }
+.addCategoryButtons {
+    justify-content: space-around;
+    display: flex;
+}
+.addCategoryButtons button {
+    width: 120px;
+    margin-right: 15px;
+}
+.addCategoryButtons button:nth-child(3){
+    margin-right: 3px;
+}
+#categoryCreator .buttonsRow {
+    justify-content: center;
+}
+.subCateg {
+    padding-left:25px;
+}
+.category {
+    padding-left:50px;
+} 
+
 @media (max-width: 1250px) {
     .creatorsWrapper {
         flex-direction: column;
@@ -178,5 +203,17 @@ select {
     }
     #labelCreator {
         order: 2;
+    }
+}
+@media (max-width: 500px) {
+    .addCategoryButtons {
+            display: initial;
+    }
+    .addCategoryButtons button {
+        display: block;
+        width: 100%;
+        margin-right: 0;
+        margin: auto;
+        margin-bottom: 10px;
     }
 }

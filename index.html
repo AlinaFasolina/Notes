@@ -7,7 +7,7 @@
 	  	src="http://code.jquery.com/jquery-3.3.1.min.js"
 	  	integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
 	  	crossorigin="anonymous"></script><!-- подключение jquery-->
-		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous"><!--подключение иконок fontawesome-->
+		 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous"><!--подключение иконок fontawesome -->
 		<link rel="stylesheet" href="style.css"><!--подключение основных стилей-->
 	</head>
 	<body>
@@ -19,15 +19,24 @@
 				<div class="creatorRow">
 					<p class="categoryName">Название категории:</p>
 					<input type="text" id="categoryName" value="" />
+					<div class="addCategoryButtons">
+						<button id="parentBtn" onclick="pushCategory(this)">Добавить как родительскую категорию</button>
+						<button id="subCategoryBtn" onclick="pushCategory(this)">Добавить как подкатегорию</button>
+						<button id="categoryBtn" onclick="pushCategory(this)">Добавить как категорию</button>
+					</div>
 				 </div>
 				<div class="creatorRow">
 					<p>Родительская категория:</p>
 					 <select id="selectParentCategory" size="4" name="hero">
-						<option value="option1" id="rootCategory" selected>Родительская категория отсутствует</option>
+						<!-- <option value="option1" id="rootCategory" selected>Родительская категория отсутствует</option> -->
+					</select>
+
+					<p>Подкатегория:</p>
+					<select id="selectSubCategory" size="4" name="hero">
+						<!-- <option value="option1" id="subCategory" selected>Подкатегория отсутствует</option> -->
 					</select>
 				</div>
 				<div class="buttonsRow">
-					<button onclick="pushCategory()">Создать категорию</button>
 					<button onclick="clearAllCategories()">Удалить все категории</button>
 				</div>
 			</div><!--конец блока creator-->
@@ -136,7 +145,15 @@
 			/*---------------------------------------
 	    		1)ФУНКЦИЯ ДОБАВЛЕНИЯ НОВОЙ КАТЕГОРИИ
 	    	----------------------------------------*/
-			function pushCategory() {
+			function pushCategory(elem) {
+				/*ОПИСАНИЕ ФУНКЦИИ "pushCategory"
+				Функция вызывается по нажатию на 1 из 3-х кнопок:
+				- Добавить как родительскую категорию.
+				- Добавить как подкатегорию.
+				- Добавить как категорию.
+				Функция принимает параметр this. Из него мы извлекаем id нажатой кнопки. И в зависимости от нажатой кнопки
+				добавляем новую категорию либо как родительскую, либо как подкатегорию родительской, либо как категорию внутри подкатегории.*/
+	
 				/*если приложение запущены впервые, создаем новый объект "categories" с пустым массивом "queue", в котором будем хранить все категории заметок*/
 		    	if (localStorage.getItem("categories") === null) {
 				    /*Создаем объект categories - объект, в котором хранятся все категории*/	
@@ -145,15 +162,15 @@
 					}
 					/*помещаем этот объект в localStorage(изначально объект пуст).*/
 					localStorage.setItem('categories', JSON.stringify(categories));
-
-					// проверяем ввел ли пользователь название категории в input
+					// проверяем ввел ли пользователь название категории в input. При первом запуске приложения первая добавленная категория будет наивысшей в иерархии категорий - родительской.
 					if ($('#categoryName').val() !== '') {
-
 						/*преобразовали переменную categories, взятую из localstorage в обычный объект*/
 						var allCategories = JSON.parse(localStorage.getItem('categories'));
 						/*добавили новую категорию в массив категорий(массив "queue" объекта "categories")*/
 						allCategories.queue.push({
 							name: $('#categoryName').val(),
+							parent: -1,
+							subCategory: 0
 						})
 						/*поместили объект с добавленной новой категорией снова в localstorage*/
 						localStorage.setItem('categories',JSON.stringify(allCategories));
@@ -168,42 +185,86 @@
 
 		    	/*если приложение запущено не впервые, то мы не создаем снова пустой объект с масивом категорий "categories", а записываем категорию в существующий массив.*/
 		    	else {
-					// проверяем ввел ли пользователь название категории в input
-					if ($('#categoryName').val() !== '') {
-						/*проверяем выбрал ли пользователь внутри selectа родительской категории
-						опцию "Родительская категория отсутствует".Если да, то в поле "parent" текущей категории вписываем -1.
-						это значит что мы добавим текущую категорию в select как родительскую(у нее самой нет родителей).
-						По умолчанию атрибут selected установлен на поле "Родительская категория отсутствует".*/
-						if ($( "option:selected" ).attr('value') == "option1") {
-							/*преобразовали переменную categories, взятую из localstorage в обычный объект*/
-							var allCategories = JSON.parse(localStorage.getItem('categories'));
-							/*добавили новую категорию в массив категорий(массив "queue" объекта "categories")*/
-							allCategories.queue.push({
-								name: $('#categoryName').val(),
-								parent: -1
-							})
-							/*поместили объект с добавленной новой категорией снова в localstorage*/
-							localStorage.setItem('categories',JSON.stringify(allCategories));
-							/*вывели все категории для заметок из localstorage*/
-							showAllCategories();
-						}
-						/*если пользователь выбрал родительскую категорию из selecta, тогда мы вписываем ее в 
-						поле для создания заметки как подкатегорию родительской категории. А в localstorage
-						записываем что у этой категории есть родитель, в поле "parent:" */
-						else {
-							/*преобразовали переменную categories, взятую из localstorage в обычный объект*/
-							var allCategories = JSON.parse(localStorage.getItem('categories'));
-							/*добавили новую категорию в массив категорий(массив "queue" объекта "categories")*/
-							allCategories.queue.push({
-								name: $('#categoryName').val(),
-								parent: $( "option:selected" ).text()
-							})
-							/*поместили объект с добавленной новой категорией снова в localstorage*/
-							localStorage.setItem('categories',JSON.stringify(allCategories));
-							/*вывели все категории для заметок из localstorage*/
-							showAllCategories();
-						}
 
+					/* проверяем ввел ли пользователь название категории в input. Если input с названием категории не пуст,
+					то далее проверяем на какую из 3-х кнопок нажал пользователь("Добавить как родительскую категорию","Добавить как подкатегорию","Добавить как категорию")*/
+					if ($('#categoryName').val() !== '') {
+						//ЕСЛИ ПРИ СОЗДАНИИ НОВОЙ КАТЕГОРИИ ПОЛЬЗОВАТЕЛЬ НАЖАЛ НА КНОПКУ:"ДОБАВИТЬ КАК РОДИТЕЛЬСКУЮ КАТЕГОРИЮ"
+						if ($(elem).attr('id') == "parentBtn") {
+							var allCategories = JSON.parse(localStorage.getItem('categories'));
+							/*добавили новую категорию в массив категорий(массив "queue" объекта "categories")*/
+							allCategories.queue.push({
+								name: $('#categoryName').val(),
+								parent: -1,
+								subCategory: 0
+							})
+							/*поместили объект с добавленной новой категорией снова в localstorage*/
+							localStorage.setItem('categories',JSON.stringify(allCategories));
+							/*вывели все категории для заметок из localstorage*/
+							showAllCategories();
+
+						}
+						//ЕСЛИ ПРИ СОЗДАНИИ НОВОЙ КАТЕГОРИИ ПОЛЬЗОВАТЕЛЬ НАЖАЛ НА КНОПКУ:"ДОБАВИТЬ КАК ПОДКАТЕГОРИЮ"
+						else if($(elem).attr('id') == "subCategoryBtn") {
+							/*делаем проверку: выбрал ли пользователь из select option меню родительскую категорию
+							для создаваемой подкатегории. Если не выбрал - выводим на экран ошибку. Если же выбрал -
+							создаем новую подкатегорию внутри объекта categories в localstorage.*/
+							if($('#selectParentCategory :selected').text() == ''){
+							   alert('родительская категория для подкатегории не выбрана.');
+							}
+							else {
+								/*преобразовали переменную categories, взятую из localstorage в обычный объект*/
+								var allCategories = JSON.parse(localStorage.getItem('categories'));
+								/*добавили новую категорию в массив категорий(массив "queue" объекта "categories")*/
+								allCategories.queue.push({
+									name: $('#categoryName').val(),
+									parent: $( "#selectParentCategory option:selected" ).text(),
+									subCategory: -1
+
+								})
+								/*поместили объект с добавленной новой категорией снова в localstorage*/
+								localStorage.setItem('categories',JSON.stringify(allCategories));
+								/*вывели все категории для заметок из localstorage*/
+								showAllCategories();
+							}
+
+						}
+						//ЕСЛИ ПРИ СОЗДАНИИ НОВОЙ КАТЕГОРИИ ПОЛЬЗОВАТЕЛЬ НАЖАЛ НА КНОПКУ:"ДОБАВИТЬ КАК КАТЕГОРИЮ"
+						else {
+							/*делаем проверку: выбрал ли пользователь из select option меню подкатегорию
+							для создаваемой категории. Если не выбрал - выводим на экран ошибку. Если же выбрал -
+							создаем новую категорию внутри объекта categories в localstorage.*/
+							if($('#selectSubCategory :selected').text() == ''){
+							   alert('подкатегория создаваемой категории не выбрана');
+							}
+							else {
+								/*преобразовали переменную categories, взятую из localstorage в обычный объект*/
+								var allCategories = JSON.parse(localStorage.getItem('categories'));
+								/*чтобы вписать значение в поле "parent" нам нужно найти родительскую категорию
+								выбраннной подкатегории. Содаем переменную selectedSubCategory,
+								в которую поместим название выбранной подкатегории.*/
+								var selectedSubCategory = $('#selectSubCategory :selected').text();
+ 							    /*проходим циклом по всем элементам массива queue объекта categories*/
+ 							    for(var i = 0; i < allCategories.queue.length; i++) {
+ 							    	/*если название какой-то элемента массива queue объекта categories совпадет с названием выбранной подкатегории*/
+						    		if (allCategories.queue[i].name == selectedSubCategory) {
+						    			//запоминаем название родительской категории данной подкатегории
+						    			var selectedSubCategoryParent= (allCategories.queue[i].parent);
+								    }
+							    }
+								/*добавили новую категорию в массив категорий(массив "queue" объекта "categories")*/
+								allCategories.queue.push({
+									name: $('#categoryName').val(),
+									parent: selectedSubCategoryParent,
+									subCategory: $( "#selectSubCategory option:selected" ).text()
+
+								})
+								/*поместили объект с добавленной новой категорией снова в localstorage*/
+								localStorage.setItem('categories',JSON.stringify(allCategories));
+								/*вывели все категории для заметок из localstorage*/
+								showAllCategories();
+							}
+						}
 					}
 					else {
 						alert('поле с категорией пусто!');
@@ -221,24 +282,17 @@
 					  	    outputs += '<option>' + allCategories.queue[i].name + '</option>';
 				    	}
 				    }
-				document.getElementById("selectParentCategory").innerHTML='<option value="option1" id="rootCategory" selected>Родительская категория отсутствует</option>' + outputs;
+				document.getElementById("selectParentCategory").innerHTML=outputs;
 			    
-
-			    /*если категория дочерняя для какой-то родительской, то в поле создания заметки
-			    дочерняя категория будет находить внутри родительской.*/
+				/*Также выводим все подкатегории в select option блока selectSubCategory. Для этого делаем проверку: поле subCategory должно быть равно -1.*/
 				var allCategories = JSON.parse(localStorage.getItem('categories'));
-				var output = "";
-				/*создаем двойной цикл внутри массива категорий, и если поле parent 
-				какой-то категории совпало с полем name другой категории, 
-				то первое поле- дочернее для второго.*/
-			    for(var i = 0; i < allCategories.queue.length; i++) {
-			    	for(var j = 0; j < allCategories.queue.length; j++) {
-			    		if (allCategories.queue[i].parent == allCategories.queue[j].name) {
-			    			console.log(allCategories.queue[i].name + 'это ребенок' + allCategories.queue[j].name);
-					  	    output = '<option>' + allCategories.queue[i].name + '</option>';
-			    		}
-			    	}
-			    }
+				var outputs = "";
+				    for(var i = 0; i < allCategories.queue.length; i++) {
+				    	if (allCategories.queue[i].subCategory == -1) {
+					  	    outputs += '<option>' + allCategories.queue[i].name + '</option>';
+				    	}
+				    }
+				document.getElementById("selectSubCategory").innerHTML= outputs;
 				console.log(allCategories);
 
 
@@ -270,13 +324,86 @@
 				3)ФУНКЦИЯ ОТОБРАЖЕНИЯ ВСЕХ СОЗДАННЫХ КАТЕГОРИЙ(выводятся из объекта categories)
 			---------------------------------------------------------------------------------------*/
 			function showAllCategories() {
-		    	if (localStorage.getItem("categories") !== null) {
+				/*ОПИСАНИЕ ФУНКЦИИ "showAllCategories"
+					1)вывод родительских категорий в блок "создать заметку"
+					2)вывод подкатегорий в блок "создать заметку"
+					3)вывод категорий(самый нижний порядок иерархии) в блок "создать заметку"
+					4)заполнение select option меню(блок selectparentcategory) родительскими категориями
+					5)заполнение select option меню(блок selectsubcategory) подкатегориями
+				*/
+				
+				/*если переменная categories внутри localstorage не пуста(т.е. приложение запущено не впервые)*/
+				if (localStorage.getItem("categories") !== null) {
+					/*преобразовали переменную categories, взятую из localstorage в обычный объект*/
+					var allCategories = JSON.parse(localStorage.getItem('categories'));
+					var outputs = "";
+
+
+					/*ВЫВОД РОДИТЕЛЬСКИХ КАТЕГОРИЙ В БЛОК "СОЗДАТЬ ЗАМЕТКУ"
+					Перебираем все категории, из них выделяем категории самого высшего уровня - родительские.
+					У них поле parent = -1. Выводим все родительские категории в блок "Создать заметку" в раздел "Категория(id = noteCategoryWrapper)"*/
+				    for(var i = 0; i < allCategories.queue.length; i++) {
+				    	if ( allCategories.queue[i].parent == -1) {
+					  	    outputs += '<li class="parentCategory"><input type="checkbox" name="categoryChoise"/><label>' + allCategories.queue[i].name + '</label><span id="categoryRemove" onclick="categoryRemove(this)"> <i class="fas fa-times"></i><span></li>';
+				    	}
+				    }
+				    document.getElementById("noteCategoryWrapper").innerHTML= outputs;
+
+
+					/*ВЫВОД ПОДКАТЕГОРИЙ В БЛОК "СОЗДАТЬ ЗАМЕТКУ"(со смещением вправо)
+					Родительские категории уже отображены в верстке и находятся в блоке noteCategoryWrapper. Теперь нам нужно разместить под ними подкатегории, сместив их немного вправо.
+					Для этого будем делать двойной перебор. Внешний перебор - по родительским категориям из верстки(Названия родительских категорий находятся в тэгах label внутри отдельных li
+					в блоке #noteCategoryWrapper).Каждый элемент внешнего перебора - название родительской категории. Внутренний перебор происходит по всем категориям, взятым из localStorage.
+					Если значение поля "parent" для элемена внутреннего перебора совпадет с названием родительской категории из внешнего перебора - разместим елементы внутреннего перебора(подкатегории)
+					под родительской категорией в верстке.Также делаем проверку чтобы для категории из localStorage значение поля subCategory было равно -1, это исключает попадание категорий нижнего 
+					уровня иерархии в выборку.*/
+					$('#noteCategoryWrapper .parentCategory label').each(function() {
+						for(var i = 0; i < allCategories.queue.length; i++) {
+					    	if ((allCategories.queue[i].parent == $(this).text()) && (allCategories.queue[i].subCategory == -1)) {
+					    		outputs = '<li class="subCateg"><input type="checkbox" name="categoryChoise"/><label>' + allCategories.queue[i].name + '</label><span id="categoryRemove" onclick="categoryRemove(this)"> <i class="fas fa-times"></i><span></li>';
+					   			$(outputs).insertAfter($(this).parent());
+					    	}
+					    }
+					});
+
+					/*ВЫВОД КАТЕГОРИЙ В БЛОК "СОЗДАТЬ ЗАМЕТКУ"(со смещением вправо)
+					Отображаем категории самого нижнего уровня иерархии.В верстке они должны быть отображены под подкатегориями. Снова делаем двойной перебор.
+					Внешний перебор - по подкатегориям из верстки(класс subCateg). Внутренний - по всем категориям, взятым из localStorage. Если значение поля "subCategory"
+					для элемена внутреннего перебора(из localStorage) совпадет с названием подкатегории из внешнего перебора(из верстки) - разместим элементы внутреннего перебора(категории) под подкатегориями.*/
+					$('#noteCategoryWrapper .subCateg').each(function() {
+						for(var i = 0; i < allCategories.queue.length; i++) {
+					    	if (allCategories.queue[i].subCategory == $(this).find('label').text()) {
+					    		outputs = '<li class="category"><input type="checkbox" name="categoryChoise"/><label>' + allCategories.queue[i].name + '</label><span id="categoryRemove" onclick="categoryRemove(this)"> <i class="fas fa-times"></i><span></li>';
+					   			$(outputs).insertAfter($(this));
+								console.log('allCategories.queue[i].subCategory=' +allCategories.queue[i].subCategory);
+
+					    	}
+					    }
+					});
+
+					/*ЗАПОЛНЕНИЕ SELECT OPTION МЕНЮ(блок selectParentCategory) РОДИТЕЛЬСКИМИ КАТЕГОРИЯМИ*/
+					/*При запуске приложения, сразу же водим все родительские категории(находящиеся в перeменной categories в localStorage) в блок selectParentCategory в select option меню.
+					Для этого проверяем равно ли поле parent -1.*/
 					var allCategories = JSON.parse(localStorage.getItem('categories'));
 					var outputs = "";
 				    for(var i = 0; i < allCategories.queue.length; i++) {
-				  	    outputs += '<li><input type="checkbox" name="categoryChoise"/><label>' + allCategories.queue[i].name + '</label><span id="categoryRemove" onclick="categoryRemove(this)"> <i class="fas fa-times"></i><span></li>';
+				    	if (allCategories.queue[i].parent == -1) {
+					  	    outputs += '<option>' + allCategories.queue[i].name + '</option>';
+				    	}
 				    }
-				    document.getElementById("noteCategoryWrapper").innerHTML= outputs;
+					document.getElementById("selectParentCategory").innerHTML=outputs;
+				    
+					/*ЗАПОЛНЕНИЕ SELECT OPTION МЕНЮ(блок selectSubCategory) ПОДКАТЕГОРИЯМИ*/
+					/*При запуске приложения, сразу же водим все подкатегории(находящиеся в перeменной categories в localStorage) в блок selectSubCategory в select option меню.
+					Для этого проверяем равно ли поле subCategory -1.*/
+					var allCategories = JSON.parse(localStorage.getItem('categories'));
+					var outputs = "";
+				    for(var i = 0; i < allCategories.queue.length; i++) {
+				    	if (allCategories.queue[i].subCategory == -1) {
+					  	    outputs += '<option>' + allCategories.queue[i].name + '</option>';
+				    	}
+				    }
+					document.getElementById("selectSubCategory").innerHTML= outputs;
 				}
 			}
 			/*---------------------------------------------------------------------------------
@@ -362,7 +489,9 @@
 				//отображаем обновленные категории в поле создания заметки
 			    showAllCategories();
 			    /*удаляем все родительские категории из select option меню в поле создания категории*/
-			    $('#selectParentCategory option:not(#rootCategory)').remove();
+			    $('#selectParentCategory option').remove();
+			    $('#selectSubCategory option').remove();
+
 			}
 			/*---------------------------------------------------------
 				8)ФУНКЦИЯ УДАЛЕНИЯ ВСЕХ СУЩЕСТВУЮЩИХ ЯРЛЫКОВ ЗАМЕТОК
